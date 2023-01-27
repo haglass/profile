@@ -1,7 +1,7 @@
 import React from "react";
 
 const Location = () => {
-  return <div>Location</div>;
+  return <div>location</div>;
 };
 
 export default Location;

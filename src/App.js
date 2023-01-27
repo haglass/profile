@@ -7,22 +7,18 @@ import Community from "./components/sub/Community";
 import Department from "./components/sub/Department";
 import Gallery from "./components/sub/Gallery";
 import Join from "./components/sub/Join";
+import Location from "./components/sub/Location";
 import Youtube from "./components/sub/Youtube";
 
 function App() {
   return (
     <>
       <Header />
-      {/* 호면별 링트에 의해 출력하기위해 라우트 사용 */}
       <Route exact path="/">
         <Visual />
         <Content />
       </Route>
-      {/* 호면별 링트에 의해 출력하기위해 라우트 사용 */}
-      {/* <Route path="/department">
-        <Department />
-      </Route> */}
-      {/* 인라인 방식의 라우트 적용 */}
+      
       <Route path="/department" component={Department} />
       <Route path="/community" component={Community} />
       <Route path="/gallery" component={Gallery} />
