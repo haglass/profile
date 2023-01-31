@@ -1,7 +1,10 @@
 import React from "react";
 
+import Layout from "../common/Layout"
 const Location = () => {
-  return <div>location</div>;
+  return(
+    <Layout title={"Location"}>Location</Layout>
+    )
 };
 
 export default Location;
