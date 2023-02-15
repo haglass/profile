@@ -1,11 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import Layout from "../common/Layout";
 import CommunityCard from "./CommunityCard";
-
+import axios from "axios";
+// XSS 공격 방어 라이브러리
+// https://www.npmjs.com/package/dompurify
+// npm i dompurifyimport
+// npm i @nivo/core
+// npm i @nivo/pie
+import dompurify from "dompurify";
 // https://quilljs.com/
 // npm install react-quill
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+// 차트 불러옴
+import { ResponsivePie } from "@nivo/pie";
 
 // https://react-hook-form.com/
 // npm install react-hook-form
@@ -299,6 +307,7 @@ const Community = () => {
   ];
   const handleChange = (value) => {
     console.log(value);
+    setTag(value);
     // register 로 등록하지 않고, 강제로 넣어주는 기능
     // 주의사항으로 "<p><br></p>" 이 내용이 없는 것입니다.
     //-------------- useForm 에 데이터를 넣고 싶다.
@@ -307,9 +316,172 @@ const Community = () => {
     trigger("contents");
     //----------- useForm
   };
-
+  const [tag, setTag] = useState("<p><b>Hello</b></p>");
+  // 차트 데이터
+  const charData = [
+    {
+      id: "lisp",
+      label: "lisp",
+      value: 511,
+      color: "hsl(174, 70%, 50%)",
+    },
+    {
+      id: "erlang",
+      label: "erlang",
+      value: 272,
+      color: "hsl(357, 70%, 50%)",
+    },
+    {
+      id: "c",
+      label: "c",
+      value: 160,
+      color: "hsl(154, 70%, 50%)",
+    },
+    {
+      id: "ruby",
+      label: "ruby",
+      value: 79,
+      color: "hsl(230, 70%, 50%)",
+    },
+    {
+      id: "javascript",
+      label: "javascript",
+      value: 443,
+      color: "hsl(45, 70%, 50%)",
+    },
+  ];
   return (
     <Layout title={"Community"}>
+      {/* 차트출력 */}
+      <div style={{ width: "100%", height: 400 }}>
+        <ResponsivePie
+          data={charData}
+          margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+          innerRadius={0.5}
+          padAngle={0.7}
+          cornerRadius={3}
+          activeOuterRadiusOffset={8}
+          borderWidth={1}
+          borderColor={{
+            from: "color",
+            modifiers: [["darker", 0.2]],
+          }}
+          arcLinkLabelsSkipAngle={10}
+          arcLinkLabelsTextColor="#333333"
+          arcLinkLabelsThickness={2}
+          arcLinkLabelsColor={{ from: "color" }}
+          arcLabelsSkipAngle={10}
+          arcLabelsTextColor={{
+            from: "color",
+            modifiers: [["darker", 2]],
+          }}
+          defs={[
+            {
+              id: "dots",
+              type: "patternDots",
+              background: "inherit",
+              color: "rgba(255, 255, 255, 0.3)",
+              size: 4,
+              padding: 1,
+              stagger: true,
+            },
+            {
+              id: "lines",
+              type: "patternLines",
+              background: "inherit",
+              color: "rgba(255, 255, 255, 0.3)",
+              rotation: -45,
+              lineWidth: 6,
+              spacing: 10,
+            },
+          ]}
+          fill={[
+            {
+              match: {
+                id: "ruby",
+              },
+              id: "dots",
+            },
+            {
+              match: {
+                id: "c",
+              },
+              id: "dots",
+            },
+            {
+              match: {
+                id: "go",
+              },
+              id: "dots",
+            },
+            {
+              match: {
+                id: "python",
+              },
+              id: "dots",
+            },
+            {
+              match: {
+                id: "scala",
+              },
+              id: "lines",
+            },
+            {
+              match: {
+                id: "lisp",
+              },
+              id: "lines",
+            },
+            {
+              match: {
+                id: "elixir",
+              },
+              id: "lines",
+            },
+            {
+              match: {
+                id: "javascript",
+              },
+              id: "lines",
+            },
+          ]}
+          legends={[
+            {
+              anchor: "bottom",
+              direction: "row",
+              justify: false,
+              translateX: 0,
+              translateY: 56,
+              itemsSpacing: 0,
+              itemWidth: 100,
+              itemHeight: 18,
+              itemTextColor: "#999",
+              itemDirection: "left-to-right",
+              itemOpacity: 1,
+              symbolSize: 18,
+              symbolShape: "circle",
+              effects: [
+                {
+                  on: "hover",
+                  style: {
+                    itemTextColor: "#000",
+                  },
+                },
+              ],
+            },
+          ]}
+        />
+      </div>
+      {/* html 태그 출력하기 */}
+      <div>{tag}</div>
+      {/* XSS공격을 받을수 있으므로 아래 구문을 비추천 \
+      사용자가 html 입력하면서 js구문을 추가해서 정보취득
+      */}
+
+      {/* <div dangerouslySetInnerHTML={{ __html: tag }}></div> */}
+      <div
+        dangerouslySetInnerHTML={{ __html: dompurify.sanitize(String(tag)) }}
+      ></div>
       {/* 입력폼 */}
 
       <div className="inputBox">
